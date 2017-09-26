@@ -52,7 +52,7 @@ class DefaultController extends Controller
     * requirements={
     *    "_locale":"en|fr",
     *    "year":"\d{4}",
-    *    "title":"\w+"}
+    *    "title":"[a-zA-Z0-9-]+"}
     *)
 
      */
@@ -74,5 +74,7 @@ class DefaultController extends Controller
        return $this->render('AppBundle::layout.html.twig', array(
 
        ));
+
+       
    }
 }
