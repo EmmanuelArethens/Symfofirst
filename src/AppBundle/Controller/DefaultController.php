@@ -6,6 +6,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\Article;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class DefaultController extends Controller
 {
@@ -77,4 +80,49 @@ class DefaultController extends Controller
 
        
    }
+   
+/**
+* @Route("/db/", name="db")
+*/
+public function listArticleAction(){
+   $em = $this->getDoctrine()->getManager();
+   $articles = $em->getRepository(Article::class)->findAll();
+   return $this->render('AppBundle:Default:article.html.twig', array(
+   'articles'=> $articles
+   ));
+   
+    }
+
+    /**
+* @Route("/db/{id}", name="db")
+*/
+public function showArticleAction($id){
+    $em = $this->getDoctrine()->getManager();
+    $articles = $em->getRepository(Article::class)->find($id);
+    return $this->render('AppBundle:Default:articlebyid.html.twig', array(
+    'articles'=> $articles
+    ));
+    }
+
+
+
+/**
+*@Route("/myentity/new", name="newentity")
+*/
+
+public function formAction(){
+    $myArticle = new Article();
+    $em = $this->getDoctrine()->getManager();
+    
+    $form = $this->createFormBuilder($myArticle)
+    ->add('title', TextType::class)
+    ->add('content', TextType::class)
+    ->add('save', SubmitType::class, array('label' => 'Create Post'))
+
+    ->getForm();
+
+    return $this->render('AppBundle:Default:newentity.html.twig', array(
+        'form' => $form->createView(),
+    ));
+    }
 }
